@@ -1,0 +1,16 @@
+{
+  "name": "miniwaveme-library-updater",
+  "version": "0.0.1",
+  "main": "app.js",
+  "repository": "https://github.com/miniwaveme/library-updater",
+  "license": "MIT",
+  "scripts": {
+    "run": "node app.js"
+  },
+  "dependencies": {
+    "commander": "^2.9.0",
+    "mongoose": "^4.5.0",
+    "slug" : "^0.9.1",
+    "file-system" : "^2.2.1"
+  }
+}
