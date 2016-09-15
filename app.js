@@ -55,7 +55,7 @@ function updateLibrary(directory) {
       track = trackManager.createTrack(trackRaw['trackName'], album._id);
     }
 
-    //// Api calls
+    // Api calls
     var client = new MiniWaveMeApiClient('test', 'test');
 
     var artistApiReference = artist.apiReference;
