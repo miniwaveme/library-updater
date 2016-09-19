@@ -10,7 +10,10 @@
   "dependencies": {
     "commander": "^2.9.0",
     "mongoose": "^4.5.0",
-    "slug" : "^0.9.1",
-    "file-system" : "^2.2.1"
+    "slug": "^0.9.1",
+    "file-system": "^2.2.1"
+  },
+  "devDependencies": {
+    "babel-preset-es2015": "^6.14.0"
   }
 }
