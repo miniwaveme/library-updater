@@ -1,9 +1,9 @@
 library-updater:
-  image: node:6.6.0
-  working_dir: /
-  #volumes:
-  #  - ./:/
-  #  - ./data/music:./music/ #TODO FORMAT THIS BETTER
+  image: miniwaveme/library-updater
+  working_dir: /usr/src/app
+  volumes:
+    - ./:/usr/src/app
+    - ./test:/usr/src/music #TODO FORMALIZE THIS BETTER
   links:
     - database
 

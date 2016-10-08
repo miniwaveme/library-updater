@@ -17,7 +17,7 @@ function extractArtistFromFile(filePath) {
       obj.file.track.forEach(function(track) {
       if (track._type === 'General') {
         return {
-          "name": track.artist
+          "name": track.performer
         };
       }
     });
@@ -25,7 +25,6 @@ function extractArtistFromFile(filePath) {
 };
 
 function extractTrackFromFile(filePath) {
-
   return mediaInfoParser.exec(filePath, (err, obj) => {
       obj.file.track.forEach(function(track) {
       if (track._type === 'General') {
