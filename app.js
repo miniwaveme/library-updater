@@ -3,17 +3,17 @@
 
 const program = require('commander');
 const Promise = require('bluebird');
+const winston = require('winston');
+const async = require('async');
 
 const fileSystemTrackFinder = require('./app/finder/file-system-track-finder');
 const convertToOgg = require('./app/converter/track-converter');
-const extracter = Promise.promisifyAll(require('./app/extracter/track-id3-tags-extracter'));
+const extracter = require('./app/extracter/track-id3-tags-extracter');
 const normalizer = require('./app/normalizer/normalizer');
 const artistManager = require('./app/manager/artist-manager');
 const albumManager = require('./app/manager/album-manager');
 const trackManager = require('./app/manager/track-manager');
 const miniwaveMeApiClient = require('./app/api-client/client');
-const winston = require('winston');
-const async = require('async');
 
 winston.cli();
 
@@ -29,19 +29,11 @@ program
 program.parse(process.argv);
 function updateLibrary(directory) {
   fileSystemTrackFinder(directory, function(filePath) {
-
-    Promise.join(
-      extracter.extractAlbumFromFileAsync(filePath),
-      extracter.extractArtistFromFileAsync(filePath),
-      extracter.extractTrackFromFileAsync(filePath),
-      function (albumRaw, artistRaw, trackRaw) {
-        console.log('toto');
-      }
-    ).then(function() {
-      console.log('jijijijij');
-    }).finally(function() {
-      console.log('xoxoox');
-    });
+    Promise.all([
+      extracter.extractAlbumFromFile(filePath),
+      extracter.extractArtistFromFile(filePath),
+      extracter.extractTrackFromFile(filePath)
+    ]).then((values) => console.log(values));
     // async.waterfall([
     //   function(callback) { //Extract
     //     winston.info('Extract metadata from %s', filePath, {'filePath': filePath});

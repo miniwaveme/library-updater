@@ -1,31 +1,40 @@
-var mediaInfoParser = require('mediainfo-parser');
+const Promise = require('bluebird');
+const mediaInfoParser = Promise.promisifyAll(require('mediainfo-parser'));
 
 function extractAlbumFromFile(filePath) {
-  return mediaInfoParser.exec(filePath, (err, obj) => {
+    var data = mediaInfoParser.execAsync(filePath).
+    then(function(obj) {
       obj.file.track.forEach(function(track) {
-      if (track._type === 'General') {
-        return {
-          "name": track.album
-        };
-      }
-    });
-  });
+        if (track._type === 'General') {
+          return {
+            "name": track.album
+          };
+        }
+      });
+    })
+  ;
+
+  console.log(data);
 };
 
 function extractArtistFromFile(filePath) {
-  return mediaInfoParser.exec(filePath, (err, obj) => {
+
+  return mediaInfoParser.execAsync(filePath).
+    then(function(obj) {
       obj.file.track.forEach(function(track) {
-      if (track._type === 'General') {
-        return {
-          "name": track.performer
-        };
-      }
-    });
-  });
+        if (track._type === 'General') {
+          return {
+            "name": track.performer
+          };
+        }
+      });
+    })
+  ;
 };
 
 function extractTrackFromFile(filePath) {
-  return mediaInfoParser.exec(filePath, (err, obj) => {
+  return mediaInfoParser.execAsync(filePath).
+    then(function(obj) {
       obj.file.track.forEach(function(track) {
       if (track._type === 'General') {
         return {
