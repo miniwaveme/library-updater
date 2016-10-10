@@ -34,6 +34,9 @@ function updateLibrary(directory) {
       extracter.extractArtistFromFile(filePath),
       extracter.extractTrackFromFile(filePath)
     ]).then((values) => console.log(values));
+
+
+    
     // async.waterfall([
     //   function(callback) { //Extract
     //     winston.info('Extract metadata from %s', filePath, {'filePath': filePath});
