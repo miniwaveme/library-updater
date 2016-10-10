@@ -1,14 +1,20 @@
 function normalizeAlbumRaw(albumRaw) {
-  return albumRaw;
-}
+  return new Promise(function (resolve, reject) {
+    resolve(albumRaw);
+  });
+};
 
-function normalizeArtistRaw(albumRaw) {
-  return albumRaw;
-}
+function normalizeArtistRaw(artistRaw) {
+  return new Promise(function (resolve, reject) {
+    resolve(artistRaw);
+  });
+};
 
-function normalizeTrackRaw(albumRaw) {
-  return albumRaw;
-}
+function normalizeTrackRaw(trackRaw) {
+  return new Promise(function (resolve, reject) {
+    resolve(trackRaw);
+  });
+};
 
 module.exports = {
   normalizeAlbumRaw,

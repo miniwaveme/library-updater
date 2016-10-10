@@ -29,14 +29,24 @@ program
 program.parse(process.argv);
 function updateLibrary(directory) {
   fileSystemTrackFinder(directory, function(filePath) {
+    winston.info('Extract metadata from %s', filePath, {'filePath': filePath});
     Promise.all([
       extracter.extractAlbumFromFile(filePath),
       extracter.extractArtistFromFile(filePath),
       extracter.extractTrackFromFile(filePath)
-    ]).then((values) => console.log(values));
+    ]).then((values) => {
+      winston.info('Transform metadata from %s', filePath, {'filePath': filePath});
+      Promise.all([
+        normalizer.normalizeAlbumRaw(values[0]),
+        normalizer.normalizeArtistRaw(values[1]),
+        normalizer.normalizeTrackRaw(values[2])
+      ]).then((values) => {
+        console.log(values);
+      });
+    });
 
 
-    
+
     // async.waterfall([
     //   function(callback) { //Extract
     //     winston.info('Extract metadata from %s', filePath, {'filePath': filePath});
