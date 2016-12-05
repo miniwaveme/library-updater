@@ -4,7 +4,8 @@ var Artist = require('./../schema/artist');
 var Album = require('./../schema/album');
 
 function getTrack(number, albumId) {
-    return new Track({
+  return new Promise(function (resolve, reject) {
+    resolve(new Track({
       _id: 'test',
       slug: slug('track name'),
       createdAt: new Date(),
@@ -23,7 +24,8 @@ function getTrack(number, albumId) {
         updatedAt: new Date(),
         apiReference: 'apiReference'
       })
-    });
+    }));
+  });
 };
 
 function createTrack(number, name, artists, albumId) {

@@ -41,7 +41,48 @@ function updateLibrary(directory) {
         normalizer.normalizeArtistRaw(values[1]),
         normalizer.normalizeTrackRaw(values[2])
       ]).then((values) => {
-        console.log(values);
+
+        var albumRaw = values[0];
+        var artistRaw = values[1];
+        var trackRaw = values[2];
+
+        var artist;
+        var album
+        var track;
+
+        artistManager.getArtist(artistRaw).then(function(result) {
+          artist = result;
+          if (artist === null) {
+              winston.info('re-use artist "%s"', artist['slug'], {'filePath': filePath});
+              return new Promise(function(resolve) {
+                resolve(artist);
+              });
+          }
+
+          winston.info('create artist "%s"', artistRaw['name'], {'filePath': filePath});
+          return artistManager.createArtist(artistRaw['name']);
+        }).then(function (artist) {
+            console.log(artist);
+        });
+
+        // var artist = artistManager.getArtist(values[1]['name']);
+        // if (!artist) {
+        //   winston.info('create artist "%s"', values[1]['artistName'], {'filePath': filePath});
+        //   artist = artistManager.createArtist(values[1]['artistName']);
+        // }
+        //
+        // var album = albumManager.getAlbum(values[1]['albumName'], artist._id);
+        // if (!album) {
+        //   winston.info('create album "%s"', albumRaw['albumName'], {'filePath': filePath});
+        //   album = albumManager.createAlbum(albumRaw['albumName'], artist._id);
+        // }
+        //
+        // var track = trackManager.getTrack(trackRaw['trackName'], album._id);
+        // if (!track) {
+        //   winston.info('create track "%s"', trackRaw['trackName'], {'filePath': filePath});
+        //   track = trackManager.createTrack(trackRaw['trackName'], album._id);
+        // }
+
       });
     });
 

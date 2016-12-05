@@ -3,22 +3,26 @@ var Artist = require('./../schema/artist');
 var Album = require('./../schema/album');
 
 function getArtist(name) {
-  return new Artist({
-    _id: 'test',
-    slug: slug('artist name'),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    apiReference: 'apiReference'
+  return new Promise(function (resolve, reject) {
+    resolve(new Artist({
+      _id: 'test',
+      slug: slug('artist name'),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      apiReference: 'apiReference'
+    }));
   });
 };
 
 function createArtist(name) {
-  return new Artist({
-    _id: 'test',
-    slug: slug('artist name'),
-    createdAt: new Date(),
-    updatedAt: new Date(),
-    apiReference: 'apiReference'
+  return new Promise(function (resolve, reject) {
+    resolve(new Artist({
+      _id: 'test',
+      slug: slug('artist name'),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+      apiReference: 'apiReference'
+    }));
   });
 };
 
