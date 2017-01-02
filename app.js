@@ -62,31 +62,35 @@ function updateLibrary(directory) {
           winston.info('create artist "%s"', artistRaw['name'], {'filePath': filePath});
           return artistManager.createArtist(artistRaw['name']);
         }).then(function (artist) {
-            console.log(artist);
+           albumManager.getAlbum(albumRaw, artist._id).then(function(result) {
+
+            album = result;
+            if (album === null) {
+                winston.info('re-use album "%s"', album['slug'], {'filePath': filePath});
+                return new Promise(function(resolve) {
+                  resolve(album);
+                });
+            }
+
+            winston.info('create album "%s"', albumRaw['name'], {'filePath': filePath});
+            return albumManager.createAlbum(albumRaw['name']);
+          }).then(function(album) {
+            trackManager.getTrack(trackRaw, album._id).then(function(result) {
+
+                track = result;
+                if (track === null) {
+                  winston.info('re-use track "%s"', track['slug'], {'filePath': filePath});
+                  return new Promise(function(resolve) {
+                    resolve(track);
+                  });
+                }
+                winston.info('create track "%s"', trackRaw['name'], {'filePath': filePath});
+                return trackManager.createTrack(trackRaw['number'], trackRaw['name']);
+            });
+          });
         });
-
-        // var artist = artistManager.getArtist(values[1]['name']);
-        // if (!artist) {
-        //   winston.info('create artist "%s"', values[1]['artistName'], {'filePath': filePath});
-        //   artist = artistManager.createArtist(values[1]['artistName']);
-        // }
-        //
-        // var album = albumManager.getAlbum(values[1]['albumName'], artist._id);
-        // if (!album) {
-        //   winston.info('create album "%s"', albumRaw['albumName'], {'filePath': filePath});
-        //   album = albumManager.createAlbum(albumRaw['albumName'], artist._id);
-        // }
-        //
-        // var track = trackManager.getTrack(trackRaw['trackName'], album._id);
-        // if (!track) {
-        //   winston.info('create track "%s"', trackRaw['trackName'], {'filePath': filePath});
-        //   track = trackManager.createTrack(trackRaw['trackName'], album._id);
-        // }
-
       });
     });
-
-
 
     // async.waterfall([
     //   function(callback) { //Extract
