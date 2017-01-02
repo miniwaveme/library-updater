@@ -42,6 +42,8 @@ function updateLibrary(directory) {
         normalizer.normalizeTrackRaw(values[2])
       ]).then((values) => {
 
+        var client = new miniwaveMeApiClient('test', 'test');
+
         var albumRaw = values[0];
         var artistRaw = values[1];
         var trackRaw = values[2];
@@ -62,6 +64,12 @@ function updateLibrary(directory) {
           winston.info('create artist "%s"', artistRaw['name'], {'filePath': filePath});
           return artistManager.createArtist(artistRaw['name']);
         }).then(function (artist) {
+          var artistApiReference = artist.apiReference;
+          if (!artistApiReference) {
+            winston.info('create artist "%s" on api', artistRaw['name'], {'filePath': filePath});
+            artistApiReference = client.createArtist(artistRaw['name']);
+          }
+
            albumManager.getAlbum(albumRaw, artist._id).then(function(result) {
 
             album = result;
@@ -75,89 +83,39 @@ function updateLibrary(directory) {
             winston.info('create album "%s"', albumRaw['name'], {'filePath': filePath});
             return albumManager.createAlbum(albumRaw['name']);
           }).then(function(album) {
+
+            var albumApiReference = album.apiReference;
+            if (!albumApiReference) {
+              winston.info('create album "%s" on api', albumRaw['name'], {'filePath': filePath});
+              albumApiReference = client.createAlbum(albumRaw['name'], albumRaw['year'], artistApiReference);
+            }
+
             trackManager.getTrack(trackRaw, album._id).then(function(result) {
 
-                track = result;
-                if (track === null) {
-                  winston.info('re-use track "%s"', track['slug'], {'filePath': filePath});
-                  return new Promise(function(resolve) {
-                    resolve(track);
-                  });
-                }
-                winston.info('create track "%s"', trackRaw['name'], {'filePath': filePath});
-                return trackManager.createTrack(trackRaw['number'], trackRaw['name']);
+              track = result;
+              if (track === null) {
+                winston.info('re-use track "%s"', track['slug'], {'filePath': filePath});
+                return new Promise(function(resolve) {
+                  resolve(track);
+                });
+              }
+              winston.info('create track "%s"', trackRaw['name'], {'filePath': filePath});
+              return trackManager.createTrack(trackRaw['number'], trackRaw['name']);
+            }).then(function (track) {
+              var trackApiReference = track.apiReference;
+              if (!trackApiReference) {
+                winston.info('create track "%s" on api', trackRaw['name'], {'filePath': filePath});
+                trackApiReference = client.addTrack(trackRaw['number'], trackRaw['name'], null, albumApiReference);
+              }
+
+              winston.info('update entries on api', {'filePath': filePath});
+              artistManager.updateArtist(artist._id, artistRaw['artistName', artistApiReference]);
+              albumManager.updateAlbum(album._id, albumRaw['albumName'], album._id, albumApiReference);
+              trackManager.updateTrack(track._id, trackRaw['trackName'], null, album._id, trackApiReference);
             });
           });
         });
       });
     });
-
-    // async.waterfall([
-    //   function(callback) { //Extract
-    //     winston.info('Extract metadata from %s', filePath, {'filePath': filePath});
-    //     var albumRaw = extracter.extractAlbumFromFile(filePath);
-    //     var artistRaw = extracter.extractArtistFromFile(filePath);
-    //     var trackRaw = extracter.extractTrackFromFile(filePath);
-    //
-    //     console.log(callback);
-    //     callback(artistRaw, albumRaw, trackRaw);
-    //   },
-    //   function(artistRaw, albumRaw, trackRaw, callback) { //Transform
-    //
-    //     console.log(callback);
-    //
-    //     winston.info('Transform metadata from %s', filePath, {'filePath': filePath});
-    //     normalizer.normalizeAlbumRaw(albumRaw);
-    //     normalizer.normalizeArtistRaw(artistRaw);
-    //     normalizer.normalizeTrackRaw(trackRaw);
-    //   },
-    //   function(artistRaw, albumRaw, trackRaw, callback) { //Create library entries
-    //     var artist = artistManager.getArtist(artistRaw['artistName']);
-    //     if (!artist) {
-    //       winston.info('create artist "%s"', artistRaw['artistName'], {'filePath': filePath});
-    //       artist = artistManager.createArtist(artistRaw['artistName']);
-    //     }
-    //
-    //     var album = albumManager.getAlbum(albumRaw['albumName'], artist._id);
-    //     if (!album) {
-    //       winston.info('create album "%s"', albumRaw['albumName'], {'filePath': filePath});
-    //       album = albumManager.createAlbum(albumRaw['albumName'], artist._id);
-    //     }
-    //
-    //     var track = trackManager.getTrack(trackRaw['trackName'], album._id);
-    //     if (!track) {
-    //       winston.info('create track "%s"', trackRaw['trackName'], {'filePath': filePath});
-    //       track = trackManager.createTrack(trackRaw['trackName'], album._id);
-    //     }
-    //   },
-    //   function(artistRaw, albumRaw, trackRaw, artist, album, track, callback) { // Api calls
-    //     var client = new miniwaveMeApiClient('test', 'test');
-    //
-    //     var artistApiReference = artist.apiReference;
-    //     if (!artistApiReference) {
-    //       winston.info('create artist "%s" on api', artistRaw['name'], {'filePath': filePath});
-    //       artistApiReference = client.createArtist(artistRaw['name']);
-    //     }
-    //
-    //     var albumApiReference = album.apiReference;
-    //     if (!albumApiReference) {
-    //       winston.info('create album "%s" on api', albumRaw['albumName'], {'filePath': filePath});
-    //       albumApiReference = client.createAlbum(albumRaw['albumName'], albumRaw['year'], artistApiReference);
-    //     }
-    //
-    //     var trackApiReference = track.apiReference;
-    //     if (!trackApiReference) {
-    //       winston.info('create album "%s" on api', albumRaw['trackName'], {'filePath': filePath});
-    //       var trackFile = convertToOgg(filePath); //TODO
-    //       trackApiReference = client.addTrack(albumRaw['trackNumber'], albumRaw['trackName'], null, albumApiReference);
-    //     }
-    //   },
-    //   function(artistRaw, albumRaw, trackRaw, artist, album, track, callback) { // Update library entries with API Data
-    //     winston.info('update entries on api', {'filePath': filePath});
-    //     artistManager.updateArtist(artist._id, artistRaw['artistName', artistApiReference]);
-    //     albumManager.updateAlbum(album._id, albumRaw['albumName'], album._id, albumApiReference);
-    //     trackManager.updateTrack(track._id, trackRaw['trackName'], null, album._id, trackApiReference);
-    //   }
-    //]);
   });
 }

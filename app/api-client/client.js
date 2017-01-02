@@ -6,15 +6,21 @@ function Client(appKey, appSecret) {
 }
 
 method.createArtist = function() {
-    return 'test';
+    return new Promise(function (resolve, reject) {
+      resolve('test');
+    });
 };
 
 method.createAlbum = function() {
-    return 'test';
+  return new Promise(function (resolve, reject) {
+    resolve('test');
+  });
 };
 
 method.addTrack = function() {
-  return 'test';
+  return new Promise(function (resolve, reject) {
+    resolve('test');
+  });
 }
 
 module.exports = Client;

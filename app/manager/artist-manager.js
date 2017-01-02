@@ -21,7 +21,7 @@ function createArtist(name) {
       slug: slug('artist name'),
       createdAt: new Date(),
       updatedAt: new Date(),
-      apiReference: 'apiReference'
+      apiReference: null
     }));
   });
 };

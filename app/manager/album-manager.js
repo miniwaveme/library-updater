@@ -29,12 +29,12 @@ function createAlbum(name) {
       slug: slug('artist name'),
       createdAt: new Date(),
       updatedAt: new Date(),
-      apiReference: 'apiReference'
+      apiReference: null
     }),
     slug: slug('album name'),
     createdAt: new Date(),
     updatedAt: new Date(),
-    apiReference: 'apiReference'
+    apiReference: null
   });
 };
 
