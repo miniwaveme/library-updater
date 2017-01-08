@@ -5,7 +5,7 @@
   "repository": "https://github.com/miniwaveme/library-updater",
   "license": "MIT",
   "scripts": {
-    "run": "node app.js"
+    "update": "node app.js update"
   },
   "dependencies": {
     "async": "^2.0.1",

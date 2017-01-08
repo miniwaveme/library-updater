@@ -15,7 +15,7 @@ help:
 
 # library-updater #
 library-updater-run:
-	docker-compose run --rm --service-ports library-updater npm start
+	docker-compose run --rm --service-ports library-updater npm run update ./
 
 # docker-compose #
 cmp-up:
