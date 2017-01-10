@@ -1,0 +1,7 @@
+{
+  "dbConfig": {
+    "host": "LIBRARY_UPDATER_DB_URL",
+    "port": "LIBRARY_UPDATER_DB_PORT",
+    "dbname": "LIBRARY_UPDATER_DB_NAME"
+  }
+}

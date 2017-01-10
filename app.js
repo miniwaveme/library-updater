@@ -15,6 +15,13 @@ const albumManager = require('./app/manager/album-manager');
 const trackManager = require('./app/manager/track-manager');
 const miniwaveMeApiClient = require('./app/api-client/client');
 
+var config = require('config');
+var dbConfig = config.get('dbConfig');
+var mongoose = require('mongoose');
+
+// TODO
+// mongoose.connect('mongodb://'+dbConfig.host+':'+dbConfig.port+'/'+dbConfig.dbname);
+
 winston.cli();
 
 program

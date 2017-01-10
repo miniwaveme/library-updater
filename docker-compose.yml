@@ -1,4 +1,4 @@
-library-updater:
+library_updater:
   image: miniwaveme/library-updater
   working_dir: /usr/src/app
   volumes:
